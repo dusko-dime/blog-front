@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import AppProvider from "./context/AppContext";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Home from "./pages/home/Home";
+import NotFound from "./pages/not-found/NotFound";
+import { ApolloProvider } from "@apollo/client";
+import apiClient from "./service/apiClient";
+import Register from "./pages/register/Register";
+import Login from "./pages/login/Login";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ height: "100vh" }}>
+      <ApolloProvider client={apiClient}>
+        <AppProvider>
+          <Router>
+            <Switch>
+              <Route path={["", "/home"]} component={Home} exact></Route>
+              <Route path="/register" component={Register} exact></Route>
+              <Route path="/login" component={Login} exact></Route>
+              <Route component={NotFound}></Route>
+            </Switch>
+          </Router>
+        </AppProvider>
+      </ApolloProvider>
     </div>
   );
-}
+};
 
 export default App;
