@@ -4,18 +4,24 @@ import { Button, Grid, TextField } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import { useLogin } from "../../service/account/accountService";
 import LoadingWrapper from "../../components/LoadingWrapper";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
   const [loginUser, { loading }] = useLogin();
   const { register, handleSubmit } = useForm();
+  const history = useHistory();
 
   const loginFormSubmitHandler = async (data) => {
     console.log(data, "DATA");
-    const response = await loginUser({
-      email: data.email,
-      password: data.password,
-    });
-    console.log(response);
+    try {
+      await loginUser({
+        email: data.email,
+        password: data.password,
+      });
+      history.push("/home");
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (

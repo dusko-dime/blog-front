@@ -1,12 +1,15 @@
 import React, { createContext, useState } from "react";
 import PropTypes from "prop-types";
+// import { setContext } from "@apollo/client/link/context";
 
 const defaultState = {
   isAuthorized: null,
+  jwtToken: null,
 };
 
 const defaultActions = {
   authorizeTo: () => {},
+  setJwtToken: () => {},
 };
 
 export const AppContext = createContext({
@@ -18,17 +21,25 @@ export const AppConsumer = AppContext.Consumer;
 
 export const AppProvider = ({ children }) => {
   const [isAuthorized, setAuthorized] = useState(false);
+  const [jwtToken, setJwtToken] = useState();
 
-  const authorizeTo = (authorized) => {
+  const authorizeTo = (authorized, jwtToken) => {
     setAuthorized(authorized);
+    if (authorized) {
+      setJwtToken(jwtToken);
+      localStorage.setItem("token", jwtToken);
+    } else {
+      setJwtToken(null);
+      localStorage.setItem("token", null);
+    }
   };
 
   const stateValue = {
     isAuthorized,
+    jwtToken,
     authorizeTo,
+    setJwtToken,
   };
-
-  console.log(stateValue, "gg");
 
   return (
     <AppContext.Provider value={stateValue}>{children}</AppContext.Provider>

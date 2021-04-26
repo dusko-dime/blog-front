@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { LOGIN, REGISTER_ACCOUNT } from "../account/accountQueries";
+import { useAppStateValue } from "../../context/AppContext";
 
 export const useRegisterAccount = () => {
   const [registerAccount, { loading, data }] = useMutation(REGISTER_ACCOUNT);
@@ -18,14 +19,16 @@ export const useRegisterAccount = () => {
 
 export const useLogin = () => {
   const [login, { loading, data }] = useMutation(LOGIN);
+  const { authorizeTo } = useAppStateValue();
 
   const callLogin = ({ email, password }) => {
-    console.log(email, password, "PASS");
     return login({
       variables: {
         email,
         password,
       },
+    }).then(({ data }) => {
+      authorizeTo(true, data.login.accessToken);
     });
   };
 
